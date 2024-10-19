@@ -1,0 +1,141 @@
+* Namespacing
+    • Isolating resources per process (or group of processes)
+
+* Control Groups (cgroups)
+    • Limiting the amourn od resources used per process
+
+* Image
+    • a file system snapshot
+    • primary parts of an image are a set of files and a primary command.
+
+* Container
+    • instance of an image
+
+# SECTION 2 MANIPULATING CONTAINERS WITH THE DOCKER CLIENT
+    • docker ps
+        - list all running containers
+
+    • docker ps -a
+        - list all containers
+
+    • docker run
+        - create and start a container
+
+    • docker create
+        - returns the container ID
+
+    • docker start <container_id>
+        - start a container
+
+    • docker system prune
+        - remove all stopped containers
+
+    • docker logs <container_id>
+        - print logs
+
+    • docker stop <container_id>
+        - stop a container gracefully, send a SIGTERM signal
+
+    • docker kill <container_id>
+        - stop a container, send a SIGKILL signal
+
+    • docker exec -it <container_id> <command>
+        - run a command in a running container
+        - the -it flag is used to attach the terminal to the command
+
+    • docker run -it <image> sh
+        - run a shell in a container
+
+# SECTION 3 BUILDING CUSTOM IMAGES THROUGH DOCKER SERVER
+    • alpine
+        - a lightweight linux distribution
+        - apk is a package manager that comes pre-installed with alpine
+
+    • FROM <image>
+        - specify a base image
+        - download the image from the docker hub
+
+    • RUN <command>
+        - run commands to install dependencies additional programs
+        - takes image and creates a temporary container
+        - executes command in the temporary container
+        - take container file system snapshot
+
+    • CMD <command>
+        - default command to run when the container starts
+
+    • cache
+        - docker uses cache to speed up the build process
+        - if a command is run and the result is the same as a previous run, docker will use the cache
+        - if a command is run and the result is different, docker will not use the cache
+
+    • tagging an image
+        - docker build -t <docker_id>/<project_name>:<version> .
+        - docker_id is the docker hub id
+        - project_name is the name of the project
+        - version is the version of the project
+        - . is the path to the Dockerfile
+
+    • docker commit -c 'CMD ["<command>"]' <container_id>
+        - create an image from a container
+        - -c flag is used to specify the default command
+
+
+# SECTION 4 MAKING REAL PROJECTS WITH DOCKER
+    • docker build --progress=plain .
+        - --progress=plain flag is used to show the build progress
+
+    • COPY <source> <destination>
+        - copy files from the host to the container
+
+    • port mapping
+        - docker run -p <host_port>:<container_port> <image>
+        - host_port is the port on the host
+        - container_port is the port on the container
+
+    • specifying a working directory
+        - WORKDIR <path>
+        - set the working directory for the container
+
+    • minimizing cache busting
+        - copy the package.json file and run npm install before copying the rest of the files
+        - this way, if the package.json file changes, the cache will be busted and the npm install command will be run again
+
+
+# SECTION 5 DOCKER COMPOSE
+    • docker compose
+        - a tool for defining and running multi-container Docker applications
+        - uses a YAML file to configure the application's services
+
+    • docker compose up
+        - create and start containers
+
+    • docker compose up --build
+        - create and start containers, rebuild images
+
+    • docker compose down
+        - stop and remove containers
+
+    • docker compose ps
+        - list containers in the compose file
+
+# SECTION 6 PRODUCTION WORKFLOW
+    • docker build  -f <dockerfile>
+        - specify a Dockerfile
+
+    • DOCKER VOLUMES
+        - put in a reference that points back to the host machine
+        - docker run -v /app/node_modules -v $(pwd):/app <image>
+
+    • bind volumes, build and run react app
+        - docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app <image>
+
+    • docker exec -it <container_id> npm run test
+        - run tests in a container
+
+    • docker attach <container_id>
+        - attach to a running container (stdin, stdout, stderr)
+
+    • aws secret key
+        - 4sMLD/k8X7M2pKXHe38R16KM6ldRwpys4+j+lDMt
+
